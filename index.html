@@ -43,7 +43,7 @@ document.getElementById("btnLocation").addEventListener("click", function() {
     let long = pos.coords.longitude;
 
     // Hantar data ke Google Apps Script
-    fetch("https://script.google.com/macros/s/AKfycby0GjaWfIpdbjpBFwQGJJuOcldWzg7pnuKkU9olzBNE5vcPhfjOvxkwIAUnny_gFNM/exec", {
+    fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycby0GjaWfIpdbjpBFwQGJJuOcldWzg7pnuKkU9olzBNE5vcPhfjOvxkwIAUnny_gFNM/exec/exec", {
       method: "POST",
       body: JSON.stringify({ latitude: lat, longitude: long })
     })
