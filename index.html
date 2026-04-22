@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Luggage</title>
+<style>
+body{font-family:Arial;text-align:center;background:#f2f2f2;margin:0;padding:0;}
+.box{background:white;width:90%;max-width:420px;margin:80px auto;padding:30px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.15);}
+button,a{display:block;width:100%;margin-top:12px;padding:15px;border:none;border-radius:10px;font-size:16px;text-decoration:none;cursor:pointer;}
+button{background:#007bff;color:white;}
+.callbtn{background:#ff9800;color:white;}
+.mapbtn{background:#28a745;color:white;}
+#status{margin-top:20px;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>📦 Luggage Found</h1>
+<p><b>Owner:</b> Wan Ahnaf</p>
+<p><b>Phone:</b> 011-39962066</p>
+<p>Please press the button below.</p>
+
+<button id="btnLocation">Send Location</button>
+<a class="callbtn" href="tel:01139962066">📞 Call Owner</a>
+<a class="mapbtn" id="btnMap" href="#" target="_blank" style="display:none;">🗺️ Open Location in Maps</a>
+
+<p id="status"></p>
+</div>
+
+<script>
+document.getElementById("btnLocation").addEventListener("click", function() {
+  if(!confirm("Are you sure you want to send your current location to the owner?")) return;
+
+  if(!navigator.geolocation) {
+    document.getElementById("status").innerText = "Geolocation not supported by this browser.";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    let lat = pos.coords.latitude;
+    let long = pos.coords.longitude;
+
+    // Hantar data ke Google Apps Script
+    fetch("https://script.google.com/macros/s/AKfycby0GjaWfIpdbjpBFwQGJJuOcldWzg7pnuKkU9olzBNE5vcPhfjOvxkwIAUnny_gFNM/exec", {
+      method: "POST",
+      body: JSON.stringify({ latitude: lat, longitude: long })
+    })
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("status").innerText = "Location successfully sent!";
+      let mapLink = document.getElementById("btnMap");
+      mapLink.href = "https://www.google.com/maps?q=" + lat + "," + long;
+      mapLink.style.display = "block";
+    })
+    .catch(err => { document.getElementById("status").innerText = "Error sending location."; });
+
+  }, function(err) {
+    document.getElementById("status").innerText = "Location permission denied.";
+  });
+});
+</script>
+
+</body>
+</html>
